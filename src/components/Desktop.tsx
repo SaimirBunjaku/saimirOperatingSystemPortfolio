@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DesktopIcon from './DesktopIcon';
 import ThemeToggle from './ThemeToggle';
 import MusicPlayer from './MusicPlayer';
-import { User, FolderOpen, Code, Mail, FileText, Palette, Gamepad } from 'lucide-react';
+import { User, FolderOpen, Code, Mail, Clipboard, FileText, Palette, Gamepad } from 'lucide-react';
 
 interface DesktopProps {
   onOpenWindow: (windowId: string) => void;
@@ -31,6 +31,7 @@ const Desktop: React.FC<DesktopProps> = ({
     experience: 'Experience',
     contact: 'Contact',
     games: 'Games',
+    resume: 'CV Resume',
   });
 
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -54,7 +55,7 @@ const Desktop: React.FC<DesktopProps> = ({
     },
     {
       id: 'experience',
-      icon: FileText,
+      icon: Clipboard,
       position: { x: 50, y: 350 }
     },
     {
@@ -66,7 +67,12 @@ const Desktop: React.FC<DesktopProps> = ({
       id: 'games',
       icon: Gamepad,
       position: { x: 50, y: 550 }
-    }
+    },
+    {
+      id: 'resume',
+      icon: FileText,  // or use any icon you like
+      position: { x: 50, y: 650 }
+    },
   ];
 
   const handleIconDoubleClick = (windowId: string) => {

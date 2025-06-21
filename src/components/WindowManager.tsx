@@ -7,6 +7,7 @@ import ExperienceWindow from './windows/ExperienceWindow';
 import ContactWindow from './windows/ContactWindow';
 import GamesWindow from './windows/GamesWindow';
 import SnakeGame from './games/SnakeGame';
+import ResumeWindow from './windows/ResumeWindow';
 
 interface WindowManagerProps {
   openWindows: string[];
@@ -66,6 +67,8 @@ const WindowManager: React.FC<WindowManagerProps> = ({
         return <GamesWindow onOpenGame={(id) => onOpenWindow(id)} />;
       case 'snake':
         return <SnakeGame />;
+      case 'resume':
+        return <ResumeWindow />
       default:
         return <div>Unknown window</div>;
     }
@@ -87,6 +90,8 @@ const WindowManager: React.FC<WindowManagerProps> = ({
         return 'Games Folder';
       case 'snake':
         return 'Snake Game';
+      case 'resume':
+        return 'Resume';
       default:
         return windowId;
     }
