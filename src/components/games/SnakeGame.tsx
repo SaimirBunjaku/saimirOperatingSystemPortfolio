@@ -93,22 +93,23 @@ const SnakeGame: React.FC = () => {
   }, [food]);
 
   return (
-    <div className="w-[350px] h-[400px] flex flex-col items-center p-4 bg-black text-white overflow-hidden">
-      <div className="text-xl font-bold mb-2">🐍 Snake Game</div>
-      <div className="mb-2 text-sm">
-        Score: <span className="font-semibold">{score}</span>
+  <div className="w-[350px] h-[330px] flex flex-col items-center p-4 bg-black text-white overflow-hidden">
+    <div className="text-xl font-bold mb-2">🐍 Snake Game</div>
+    <div className="mb-2 text-sm">
+      Score: <span className="font-semibold">{score}</span>
+    </div>
+
+    {isGameOver ? (
+      <div className="flex flex-1 flex-col justify-center items-center text-red-500">
+        <div className="text-3xl font-bold mb-4">Game Over</div>
+        <button
+          onClick={resetGame}
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white text-base"
+        >
+          Restart
+        </button>
       </div>
-      {isGameOver && (
-        <div className="flex flex-col items-center text-red-500 mb-4">
-          <div className="mb-2">Game Over</div>
-          <button
-            onClick={resetGame}
-            className="bg-red-600 hover:bg-red-700 px-4 py-1 rounded text-white text-sm"
-          >
-            Restart
-          </button>
-        </div>
-      )}
+    ) : (
       <div
         className="grid"
         style={{
@@ -131,8 +132,10 @@ const SnakeGame: React.FC = () => {
           );
         })}
       </div>
-    </div>
-  );
+    )}
+  </div>
+);
+
 };
 
 export default SnakeGame;

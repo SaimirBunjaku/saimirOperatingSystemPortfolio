@@ -102,27 +102,29 @@ const WindowManager: React.FC<WindowManagerProps> = ({
 
 
   return (
-    <>
-      {openWindows.map((windowId, index) => (
-        <Window
-          key={windowId}
-          title={getWindowTitle(windowId)}
-          onClose={() => onCloseWindow(windowId)}
-          initialPosition={
-            windowId === 'snake'
-              ? { x: window.innerWidth / 2 - 250, y: window.innerHeight / 2 - 250 }
-              : { x: 100 + index * 30, y: 100 + index * 30 }
-          }
-          isMinimized={minimizedWindows.has(windowId)}
-          onMinimize={(minimized) => handleMinimize(windowId, minimized)}
-          isActive={activeWindow === windowId}
-          onActivate={() => onActivateWindow?.(windowId)}
-        >
-          {getWindowContent(windowId)}
-        </Window>
-      ))}
-    </>
-  );
+  <>
+    {openWindows.map((windowId, index) => (
+      <Window
+        key={windowId}
+        title={getWindowTitle(windowId)}
+        onClose={() => onCloseWindow(windowId)}
+        initialPosition={
+          windowId === 'snake'
+            ? { x: window.innerWidth / 2 - 250, y: window.innerHeight / 2 - 250 }
+            : { x: 100 + index * 30, y: 100 + index * 30 }
+        }
+        isMinimized={minimizedWindows.has(windowId)}
+        onMinimize={(minimized) => handleMinimize(windowId, minimized)}
+        isActive={activeWindow === windowId}
+        onActivate={() => onActivateWindow?.(windowId)}
+        disableOverflow={windowId === 'snake'}  // <-- Add this line
+      >
+        {getWindowContent(windowId)}
+      </Window>
+    ))}
+  </>
+);
+
 };
 
 export default WindowManager;

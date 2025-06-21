@@ -12,6 +12,7 @@ interface WindowProps {
   onMinimize?: (minimized: boolean) => void;
   isActive?: boolean;
   onActivate?: () => void;
+  disableOverflow?: boolean;
 }
 
 const Window: React.FC<WindowProps> = ({ 
@@ -22,7 +23,8 @@ const Window: React.FC<WindowProps> = ({
   isMinimized = false,
   onMinimize,
   isActive = false,
-  onActivate
+  onActivate,
+  disableOverflow = false 
 }) => {
   const isMobile = useIsMobile();
   const [position, setPosition] = useState(initialPosition);
@@ -163,7 +165,7 @@ const Window: React.FC<WindowProps> = ({
       <div className="p-4 overflow-hidden text-gray-900 dark:text-gray-100" style={{ 
         height: isMaximized ? 'calc(100% - 48px)' : isMobile ? 'calc(100% - 48px)' : 'calc(400px - 48px)' 
       }}>
-        <div className="h-full overflow-y-auto">
+        <div className={`h-full ${disableOverflow ? '' : 'overflow-y-auto'}`}>
           {children}
         </div>
       </div>
