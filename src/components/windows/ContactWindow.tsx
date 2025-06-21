@@ -31,7 +31,7 @@ const ContactWindow: React.FC<ContactWindowProps> = ({ isMaximized }) => {
   ];
 
   return (
-    <div className={`space-y-6 ${isMaximized ? 'p-4' : ''}`}>
+    <div className={`space-y-6 ${isMaximized ? 'p-6' : ''}`}>
       <div className="text-center">
         <div 
           className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-4 cursor-pointer hover:opacity-90 transition-opacity"
@@ -78,14 +78,37 @@ const ContactWindow: React.FC<ContactWindowProps> = ({ isMaximized }) => {
         ))}
       </div>
 
-      <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Available for:</h3>
-        <ul className="text-blue-700 dark:text-blue-300 text-sm space-y-1">
-          <li>• Frontend Development Projects</li>
-          <li>• React/TypeScript Consulting</li>
-          <li>• Code Reviews & Mentoring</li>
-          <li>• Freelance Opportunities</li>
-        </ul>
+      {/* Improved "Available for" section */}
+      <div className={`${isMaximized ? 'flex justify-center' : ''}`}>
+        <div className={`
+          bg-blue-50 dark:bg-blue-900 
+          border border-blue-200 dark:border-blue-700 
+          rounded-lg p-4
+          ${isMaximized ? 'w-full max-w-2xl' : 'w-full'}
+          transition-all duration-300
+        `}>
+          <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 text-center">
+            Available for:
+          </h3>
+          <ul className="text-blue-700 dark:text-blue-300 text-sm space-y-1">
+            <li className="flex items-center justify-center gap-2">
+              <span>•</span>
+              <span>Frontend Development Projects</span>
+            </li>
+            <li className="flex items-center justify-center gap-2">
+              <span>•</span>
+              <span>React/TypeScript Consulting</span>
+            </li>
+            <li className="flex items-center justify-center gap-2">
+              <span>•</span>
+              <span>Code Reviews & Mentoring</span>
+            </li>
+            <li className="flex items-center justify-center gap-2">
+              <span>•</span>
+              <span>Freelance Opportunities</span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {showImageModal && (
