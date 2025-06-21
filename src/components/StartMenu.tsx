@@ -11,11 +11,11 @@ interface StartMenuProps {
 const StartMenu: React.FC<StartMenuProps> = ({ onOpenWindow, onClose }) => {
   const menuItems = [
     { id: 'about', name: 'About Me', icon: User },
-    { id: 'projects', name: 'Projects', icon: FolderOpen },
-    { id: 'skills', name: 'Skills', icon: Code },
+    // { id: 'projects', name: 'Projects', icon: FolderOpen },
+    // { id: 'skills', name: 'Skills', icon: Code },
     { id: 'experience', name: 'Experience', icon: FileText },
     { id: 'contact', name: 'Contact', icon: Mail },
-    { id: 'games', name: 'Games', icon: Gamepad }
+    // { id: 'games', name: 'Games', icon: Gamepad }
   ];
 
   const handleItemClick = (itemId: string) => {

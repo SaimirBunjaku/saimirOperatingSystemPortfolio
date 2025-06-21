@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DesktopIcon from './DesktopIcon';
 import ThemeToggle from './ThemeToggle';
 import MusicPlayer from './MusicPlayer';
-import { User, FolderOpen, Code, Mail, Clipboard, FileText, Palette, Gamepad } from 'lucide-react';
+import { User, FolderOpen, Code, Mail, FileText, Palette, Gamepad } from 'lucide-react';
 
 interface DesktopProps {
   onOpenWindow: (windowId: string) => void;
@@ -11,11 +11,11 @@ interface DesktopProps {
   onRestoreWindow: (windowId: string) => void;
 }
 
-const Desktop: React.FC<DesktopProps> = ({ 
-  onOpenWindow, 
-  openWindows, 
-  minimizedWindows, 
-  onRestoreWindow 
+const Desktop: React.FC<DesktopProps> = ({
+  onOpenWindow,
+  openWindows,
+  minimizedWindows,
+  onRestoreWindow,
 }) => {
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -23,7 +23,6 @@ const Desktop: React.FC<DesktopProps> = ({
     iconId: string | null;
   } | null>(null);
 
-  // We move icon names to state for renaming
   const [iconNames, setIconNames] = useState<Record<string, string>>({
     about: 'About Me',
     projects: 'Projects',
@@ -31,48 +30,21 @@ const Desktop: React.FC<DesktopProps> = ({
     experience: 'Experience',
     contact: 'Contact',
     games: 'Games',
-    resume: 'CV Resume',
   });
 
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState<string>('');
 
+  // New state for currently selected icon (single selection)
+  const [selectedIconId, setSelectedIconId] = useState<string | null>(null);
+
   const desktopIcons = [
-    {
-      id: 'about',
-      icon: User,
-      position: { x: 50, y: 50 }
-    },
-    {
-      id: 'projects',
-      icon: FolderOpen,
-      position: { x: 50, y: 150 }
-    },
-    {
-      id: 'skills',
-      icon: Code,
-      position: { x: 50, y: 250 }
-    },
-    {
-      id: 'experience',
-      icon: Clipboard,
-      position: { x: 50, y: 350 }
-    },
-    {
-      id: 'contact',
-      icon: Mail,
-      position: { x: 50, y: 450 }
-    },
-    {
-      id: 'games',
-      icon: Gamepad,
-      position: { x: 50, y: 550 }
-    },
-    {
-      id: 'resume',
-      icon: FileText,  // or use any icon you like
-      position: { x: 50, y: 650 }
-    },
+    { id: 'about', icon: User, position: { x: 50, y: 50 } },
+    { id: 'projects', icon: FolderOpen, position: { x: 50, y: 150 } },
+    { id: 'skills', icon: Code, position: { x: 50, y: 250 } },
+    { id: 'experience', icon: FileText, position: { x: 50, y: 350 } },
+    { id: 'contact', icon: Mail, position: { x: 50, y: 450 } },
+    { id: 'games', icon: Gamepad, position: { x: 50, y: 550 } },
   ];
 
   const handleIconDoubleClick = (windowId: string) => {
@@ -115,9 +87,9 @@ const Desktop: React.FC<DesktopProps> = ({
 
   const handleRenameSubmit = () => {
     if (renamingId) {
-      setIconNames(prev => ({
+      setIconNames((prev) => ({
         ...prev,
-        [renamingId]: renameValue.trim() || prev[renamingId], // fallback if empty
+        [renamingId]: renameValue.trim() || prev[renamingId],
       }));
       setRenamingId(null);
       setRenameValue('');
@@ -133,11 +105,20 @@ const Desktop: React.FC<DesktopProps> = ({
     }
   };
 
+  // Clear context menu on window click
   useEffect(() => {
-    const handleClick = () => setContextMenu(null);
+    const handleClick = () => {
+      setContextMenu(null);
+      setSelectedIconId(null); // Also clear selection when clicking outside icons
+    };
     window.addEventListener('click', handleClick);
     return () => window.removeEventListener('click', handleClick);
   }, []);
+
+  // Handle icon selection
+  const handleSelectIcon = (id: string) => {
+    setSelectedIconId(id);
+  };
 
   return (
     <div className="absolute inset-0 pb-12">
@@ -147,6 +128,10 @@ const Desktop: React.FC<DesktopProps> = ({
           style={{ position: 'absolute', left: icon.position.x, top: icon.position.y }}
           onDoubleClick={() => handleIconDoubleClick(icon.id)}
           onContextMenu={(e) => handleIconRightClick(e, icon.id)}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent window click from clearing selection immediately
+            handleSelectIcon(icon.id);
+          }}
         >
           <DesktopIcon
             id={icon.id}
@@ -169,6 +154,8 @@ const Desktop: React.FC<DesktopProps> = ({
             icon={icon.icon}
             position={{ x: 0, y: 0 }}
             onDoubleClick={() => handleIconDoubleClick(icon.id)}
+            isSelected={selectedIconId === icon.id}
+            onSelect={handleSelectIcon}
           />
         </div>
       ))}
