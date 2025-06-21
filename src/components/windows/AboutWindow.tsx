@@ -30,7 +30,7 @@ const AboutWindow: React.FC = () => {
             </div>
             <div className="flex items-center space-x-1">
               <Calendar className="w-4 h-4" />
-              <span>3+ Years Experience</span>
+              <span>2+ Years Experience</span>
             </div>
           </div>
         </div>
