@@ -16,6 +16,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ onOpenWindow, onClose }) => {
     { id: 'experience', name: 'Experience', icon: FileText },
     { id: 'contact', name: 'Contact', icon: Mail },
     // { id: 'games', name: 'Games', icon: Gamepad }
+    { id: 'resume', name: 'Resume', icon: FileText }
   ];
 
   const handleItemClick = (itemId: string) => {

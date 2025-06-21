@@ -37,6 +37,7 @@ const Desktop: React.FC<DesktopProps> = ({
     experience: 'Experience',
     contact: 'Contact',
     games: 'Games',
+    resume: 'Resume',
   });
 
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -52,6 +53,7 @@ const Desktop: React.FC<DesktopProps> = ({
     { id: 'experience', icon: FileText, position: { x: 50, y: 350 } },
     { id: 'contact', icon: Mail, position: { x: 50, y: 450 } },
     { id: 'games', icon: Gamepad, position: { x: 50, y: 550 } },
+    { id: 'resume', icon: FileText, position: { x: 50, y: 650 } },
   ]);
 
   const handleIconDoubleClick = (windowId: string) => {
