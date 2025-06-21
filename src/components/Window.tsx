@@ -1,7 +1,9 @@
-
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { X, Minus, Maximize } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+
+// Track the highest z-index globally
+let globalZIndex = 30;
 
 interface WindowProps {
   title: string;
@@ -31,28 +33,32 @@ const Window: React.FC<WindowProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [zIndex, setZIndex] = useState(30);
+  const [zIndex, setZIndex] = useState(globalZIndex);
   const windowRef = useRef<HTMLDivElement>(null);
 
   // Adjust position for mobile devices
   useEffect(() => {
     if (isMobile) {
-      // On mobile, center the window horizontally and position near the top
       const mobilePosition = {
-        x: 0, // Start at left edge
-        y: 60  // Give some space from the top for status bar/browser UI
+        x: 0,
+        y: 60
       };
       setPosition(mobilePosition);
-      // Auto-maximize on mobile for better UX
       setIsMaximized(true);
     }
   }, [isMobile]);
+
+  const bringToFront = useCallback(() => {
+    globalZIndex += 1;
+    setZIndex(globalZIndex);
+    onActivate?.();
+  }, [onActivate]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (isMaximized) return;
     
     setIsDragging(true);
-    setZIndex(50); // Bring to front when clicked
+    bringToFront();
     const rect = windowRef.current?.getBoundingClientRect();
     if (rect) {
       setDragOffset({
@@ -60,7 +66,7 @@ const Window: React.FC<WindowProps> = ({
         y: e.clientY - rect.top
       });
     }
-  }, [isMaximized]);
+  }, [isMaximized, bringToFront]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging && !isMaximized) {
@@ -75,7 +81,7 @@ const Window: React.FC<WindowProps> = ({
     setIsDragging(false);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
@@ -88,6 +94,7 @@ const Window: React.FC<WindowProps> = ({
 
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);
+    bringToFront();
     if (isMinimized) {
       onMinimize?.(false);
     }
@@ -98,15 +105,14 @@ const Window: React.FC<WindowProps> = ({
   };
 
   const handleWindowClick = () => {
-    setZIndex(50); // Bring to front when any part of window is clicked
+    bringToFront();
     if (isMinimized) {
       onMinimize?.(false);
     }
-    onActivate?.();
   };
 
   if (isMinimized) {
-    return null; // Hide window when minimized
+    return null;
   }
 
   return (
