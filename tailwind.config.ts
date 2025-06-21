@@ -89,7 +89,14 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			backgroundImage: {
+				'dot-pattern': "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='rgba(255, 255, 255, 0.15)'/%3E%3C/svg%3E\")",
+				'dark-dot-pattern': "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='rgba(255, 255, 255, 0.1)'/%3E%3C/svg%3E\")",
+			},
+			backgroundSize: {
+				'dot-size': '20px 20px',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

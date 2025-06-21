@@ -53,7 +53,10 @@ const SkillsWindow: React.FC = () => {
   return (
     <div ref={windowRef} className="h-full flex flex-col overflow-y-auto">
       <div className={`w-full ${isMaximized ? 'max-w-6xl mx-auto' : 'px-2'}`}>
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Skills & Technologies</h2>
+        <div className={`flex items-center ${isMaximized ? 'justify-center' : 'justify-start'} space-x-2 mb-4`}>
+          <Code className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Skills & Technologies</h2>
+        </div>
         
         <div className={isMaximized 
           ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" 

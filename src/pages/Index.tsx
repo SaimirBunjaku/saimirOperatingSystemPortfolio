@@ -73,7 +73,7 @@ const Index = () => {
       {isSleeping ? (
         <SleepScreen onWake={handleWake} />
       ) : (
-        <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-900 to-purple-900 dark:from-gray-900 dark:to-gray-800 text-white">
+        <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-900 to-purple-900 dark:from-gray-900 dark:to-gray-800 text-white bg-dot-pattern dark:bg-dark-dot-pattern bg-dot-size">
           
           <Desktop 
             onOpenWindow={openWindow} 
