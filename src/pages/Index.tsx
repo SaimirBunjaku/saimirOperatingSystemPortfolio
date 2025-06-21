@@ -33,6 +33,11 @@ const Index = () => {
     setIsSleeping(false);
   };
 
+  const handleReorderWindows = (newOrder: string[]) => {
+    // Update the openWindows state with the new order
+    setOpenWindows(newOrder);
+  };
+
   return (
     <>
       {isSleeping ? (
@@ -60,6 +65,7 @@ const Index = () => {
             startMenuOpen={startMenuOpen}
             setStartMenuOpen={setStartMenuOpen}
             onActivateWindow={activateWindow}
+            onReorderWindows={handleReorderWindows}
           />
         </div>
       )}
