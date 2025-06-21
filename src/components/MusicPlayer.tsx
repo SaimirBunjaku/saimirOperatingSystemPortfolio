@@ -152,6 +152,9 @@ const MusicPlayer: React.FC = () => {
   return (
     <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 p-5 rounded-lg shadow-lg w-80 text-gray-800 dark:text-white">
       <div className="flex flex-col items-center">
+        <div className="w-full">
+          <h3 className="font-medium text-base truncate w-full text-center mb-3">Listen to some music <br></br> as you explore my Portfolio!</h3>
+        </div>
         <div className="bg-blue-600 dark:bg-blue-700 p-3 rounded-full mb-3">
           <Music className="w-6 h-6 text-white" />
         </div>
