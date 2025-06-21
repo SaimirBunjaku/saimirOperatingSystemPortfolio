@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DesktopIconProps {
   id: string;
@@ -17,13 +18,24 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({
   onDoubleClick
 }) => {
   const [isSelected, setIsSelected] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // For mobile: handle tap with a slight delay to distinguish from scrolling
+  const handleClick = () => {
+    setIsSelected(!isSelected);
+    
+    if (isMobile && isSelected) {
+      // If already selected and on mobile, treat second tap as "open"
+      onDoubleClick();
+    }
+  };
 
   return (
     <div
       className={`absolute cursor-pointer select-none group`}
       style={{ left: position.x, top: position.y }}
-      onClick={() => setIsSelected(!isSelected)}
-      onDoubleClick={onDoubleClick}
+      onClick={handleClick}
+      onDoubleClick={isMobile ? undefined : onDoubleClick}
     >
       <div className={`flex flex-col items-center p-2 rounded ${
         isSelected ? 'bg-blue-500 bg-opacity-30' : ''
@@ -34,6 +46,13 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({
         <span className="text-white text-xs font-medium text-center max-w-16 leading-tight drop-shadow-md">
           {name}
         </span>
+        
+        {/* Mobile-only indicator for selected items */}
+        {isMobile && isSelected && (
+          <div className="mt-1 text-xs text-white bg-blue-600 px-2 py-0.5 rounded-full">
+            Tap again to open
+          </div>
+        )}
       </div>
     </div>
   );
