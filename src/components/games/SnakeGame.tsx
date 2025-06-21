@@ -13,6 +13,7 @@ const SnakeGame: React.FC<SnakeGameProps> = ({ isMaximized }) => {
   const [food, setFood] = useState({ x: 2, y: 2 });
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
 
   const direction = useRef(initialDirection);
   const nextDirection = useRef(initialDirection);
@@ -38,6 +39,22 @@ const SnakeGame: React.FC<SnakeGameProps> = ({ isMaximized }) => {
     setIsGameOver(false);
     setScore(0);
   };
+
+  // Load highscore from localStorage once on mount
+  useEffect(() => {
+    const storedHighScore = localStorage.getItem('snakeHighScore');
+    if (storedHighScore) {
+      setHighScore(parseInt(storedHighScore, 10));
+    }
+  }, []);
+
+  // Update localStorage if score beats highscore
+  useEffect(() => {
+    if (score > highScore) {
+      setHighScore(score);
+      localStorage.setItem('snakeHighScore', score.toString());
+    }
+  }, [score, highScore]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -96,7 +113,6 @@ const SnakeGame: React.FC<SnakeGameProps> = ({ isMaximized }) => {
     };
   }, [food]);
 
-  // Responsive sizing based on maximized state
   const cellSize = isMaximized ? 30 : 20;
   const width = isMaximized ? 500 : 350;
   const height = isMaximized ? 480 : 330;
@@ -104,18 +120,19 @@ const SnakeGame: React.FC<SnakeGameProps> = ({ isMaximized }) => {
   return (
     <div
       className="flex flex-col items-center p-4 bg-black text-white overflow-hidden"
-      style={{ width, height, margin: '0 auto'}}
+      style={{ width, height, margin: '0 auto' }}
     >
       <div className={`font-bold mb-2 ${isMaximized ? 'text-2xl' : 'text-xl'}`}>🐍 Snake Game</div>
+      <div className="mb-1 text-sm">
+        Highscore: <span className="font-semibold">{highScore}</span>
+      </div>
       <div className="mb-2 text-sm">
         Score: <span className="font-semibold">{score}</span>
       </div>
 
       {isGameOver ? (
         <div className="flex flex-1 flex-col justify-center items-center text-red-500 w-full">
-          <div className={`${isMaximized ? 'text-4xl' : 'text-3xl'} font-bold mb-4`}>
-            Game Over
-          </div>
+          <div className={`${isMaximized ? 'text-4xl' : 'text-3xl'} font-bold mb-4`}>Game Over</div>
           <button
             onClick={resetGame}
             className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white text-base"
