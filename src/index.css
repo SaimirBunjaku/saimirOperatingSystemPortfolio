@@ -6,6 +6,7 @@
 
 @layer base {
   :root {
+    
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -52,7 +53,38 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 
+::-webkit-scrollbar-track {
+  background: rgba(209, 233, 252, 0.3); /* Very light blue track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(147, 197, 253, 0.7); /* Light blue-300 */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.8); /* Blue-400 on hover */
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgba(30, 58, 138, 0.2); /* Dark blue-900 with opacity */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.6); /* Blue-500 */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.8); /* Blue-600 */
+}
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
