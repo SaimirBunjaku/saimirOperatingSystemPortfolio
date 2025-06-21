@@ -48,7 +48,14 @@ const Desktop: React.FC<DesktopProps> = ({
       name: 'Contact',
       icon: Mail,
       position: { x: 50, y: 450 }
+    },
+    {
+      id: 'games',
+      name: 'Games',
+      icon: FolderOpen,
+      position: { x: 50, y: 550 }
     }
+
   ];
 
   const handleIconDoubleClick = (windowId: string) => {

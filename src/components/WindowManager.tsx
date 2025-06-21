@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Window from './Window';
 import AboutWindow from './windows/AboutWindow';
@@ -6,6 +5,8 @@ import ProjectsWindow from './windows/ProjectsWindow';
 import SkillsWindow from './windows/SkillsWindow';
 import ExperienceWindow from './windows/ExperienceWindow';
 import ContactWindow from './windows/ContactWindow';
+import GamesWindow from './windows/GamesWindow';
+import SnakeGame from './games/SnakeGame';
 
 interface WindowManagerProps {
   openWindows: string[];
@@ -16,9 +17,9 @@ interface WindowManagerProps {
   onMinimizeWindow: (windowId: string, isMinimized: boolean) => void;
 }
 
-const WindowManager: React.FC<WindowManagerProps> = ({ 
-  openWindows, 
-  onCloseWindow, 
+const WindowManager: React.FC<WindowManagerProps> = ({
+  openWindows,
+  onCloseWindow,
   activeWindow,
   onActivateWindow,
   minimizedWindows,
@@ -31,21 +32,17 @@ const WindowManager: React.FC<WindowManagerProps> = ({
     }
   };
 
-  // Add a function to toggle minimization from taskbar
   const toggleMinimize = (windowId: string) => {
     if (minimizedWindows.has(windowId)) {
-      // If window is minimized, restore it and make it active
       onMinimizeWindow(windowId, false);
       onActivateWindow?.(windowId);
     } else {
-      // If window is visible, minimize it
       onMinimizeWindow(windowId, true);
     }
   };
 
-  // Expose the toggleMinimize function to parent components
   useEffect(() => {
-    // @ts-ignore - Adding a custom property to the window object
+    // @ts-ignore
     window.toggleWindowMinimize = toggleMinimize;
     return () => {
       // @ts-ignore
@@ -65,6 +62,10 @@ const WindowManager: React.FC<WindowManagerProps> = ({
         return <ExperienceWindow />;
       case 'contact':
         return <ContactWindow />;
+      case 'games':
+        return <GamesWindow onOpenGame={(id) => onOpenWindow(id)} />;
+      case 'snake':
+        return <SnakeGame />;
       default:
         return <div>Unknown window</div>;
     }
@@ -82,10 +83,23 @@ const WindowManager: React.FC<WindowManagerProps> = ({
         return 'Work Experience';
       case 'contact':
         return 'Contact Information';
+      case 'games':
+        return 'Games Folder';
+      case 'snake':
+        return 'Snake Game';
       default:
         return windowId;
     }
   };
+
+  const onOpenWindow = (windowId: string) => {
+  if (!openWindows.includes(windowId)) {
+    // Create and dispatch a fake click to open a window from within WindowManager
+    const open = new CustomEvent('requestOpenWindow', { detail: windowId });
+    window.dispatchEvent(open);
+  }
+};
+
 
   return (
     <>

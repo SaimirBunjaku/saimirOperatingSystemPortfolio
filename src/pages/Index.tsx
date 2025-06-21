@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Desktop from '../components/Desktop';
 import Taskbar from '../components/Taskbar';
 import WindowManager from '../components/WindowManager';
@@ -11,6 +11,19 @@ const Index = () => {
   const [activeWindow, setActiveWindow] = useState<string | undefined>(undefined);
   const [isSleeping, setIsSleeping] = useState(true);
   const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
+
+useEffect(() => {
+  const handleOpenWindow = (e: any) => {
+    const windowId = e.detail;
+    if (!openWindows.includes(windowId)) {
+      setOpenWindows(prev => [...prev, windowId]);
+    }
+    setActiveWindow(windowId); // Optional: bring it to front
+  };
+
+  window.addEventListener('requestOpenWindow', handleOpenWindow);
+  return () => window.removeEventListener('requestOpenWindow', handleOpenWindow);
+}, [openWindows]);
 
   const openWindow = (windowId: string) => {
     if (!openWindows.includes(windowId)) {
