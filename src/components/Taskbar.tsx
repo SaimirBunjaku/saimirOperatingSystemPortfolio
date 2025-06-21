@@ -8,14 +8,24 @@ interface TaskbarProps {
   onOpenWindow: (windowId: string) => void;
   startMenuOpen: boolean;
   setStartMenuOpen: (open: boolean) => void;
+  onActivateWindow?: (windowId: string) => void;
 }
 
 const Taskbar: React.FC<TaskbarProps> = ({
   openWindows,
   onOpenWindow,
   startMenuOpen,
-  setStartMenuOpen
+  setStartMenuOpen,
+  onActivateWindow
 }) => {
+  const handleWindowClick = (windowId: string) => {
+    if (onActivateWindow) {
+      onActivateWindow(windowId);
+    } else {
+      onOpenWindow(windowId);
+    }
+  };
+
   return (
     <>
       <div className="absolute bottom-0 left-0 right-0 h-12 bg-gray-800 dark:bg-gray-900 bg-opacity-95 backdrop-blur-sm border-t border-gray-600 dark:border-gray-700 flex items-center px-2 z-50 transition-colors duration-200">
@@ -35,7 +45,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
             <button
               key={windowId}
               className="h-8 px-3 bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded text-white text-xs capitalize transition-colors border border-gray-500 dark:border-gray-600"
-              onClick={() => onOpenWindow(windowId)}
+              onClick={() => handleWindowClick(windowId)}
             >
               {windowId}
             </button>

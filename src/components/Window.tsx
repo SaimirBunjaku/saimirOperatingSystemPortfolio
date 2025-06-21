@@ -7,13 +7,21 @@ interface WindowProps {
   children: React.ReactNode;
   onClose: () => void;
   initialPosition?: { x: number; y: number };
+  isMinimized?: boolean;
+  onMinimize?: (minimized: boolean) => void;
 }
 
-const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPosition = { x: 100, y: 100 } }) => {
+const Window: React.FC<WindowProps> = ({ 
+  title, 
+  children, 
+  onClose, 
+  initialPosition = { x: 100, y: 100 },
+  isMinimized = false,
+  onMinimize
+}) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState(30);
   const windowRef = useRef<HTMLDivElement>(null);
@@ -58,15 +66,20 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
 
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);
-    if (isMinimized) setIsMinimized(false);
+    if (isMinimized) {
+      onMinimize?.(false);
+    }
   };
 
   const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
+    onMinimize?.(!isMinimized);
   };
 
   const handleWindowClick = () => {
     setZIndex(50); // Bring to front when any part of window is clicked
+    if (isMinimized) {
+      onMinimize?.(false);
+    }
   };
 
   if (isMinimized) {
@@ -116,10 +129,12 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
       </div>
 
       {/* Window content */}
-      <div className="p-4 overflow-auto text-gray-900 dark:text-gray-100" style={{ 
+      <div className="p-4 overflow-hidden text-gray-900 dark:text-gray-100" style={{ 
         height: isMaximized ? 'calc(100% - 48px)' : 'calc(400px - 48px)' 
       }}>
-        {children}
+        <div className="h-full overflow-y-auto">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Window from './Window';
 import AboutWindow from './windows/AboutWindow';
 import ProjectsWindow from './windows/ProjectsWindow';
@@ -10,9 +10,31 @@ import ContactWindow from './windows/ContactWindow';
 interface WindowManagerProps {
   openWindows: string[];
   onCloseWindow: (windowId: string) => void;
+  activeWindow?: string;
+  onActivateWindow?: (windowId: string) => void;
 }
 
-const WindowManager: React.FC<WindowManagerProps> = ({ openWindows, onCloseWindow }) => {
+const WindowManager: React.FC<WindowManagerProps> = ({ 
+  openWindows, 
+  onCloseWindow, 
+  activeWindow,
+  onActivateWindow 
+}) => {
+  const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
+
+  const handleMinimize = (windowId: string, minimized: boolean) => {
+    setMinimizedWindows(prev => {
+      const newSet = new Set(prev);
+      if (minimized) {
+        newSet.add(windowId);
+      } else {
+        newSet.delete(windowId);
+        onActivateWindow?.(windowId);
+      }
+      return newSet;
+    });
+  };
+
   const getWindowContent = (windowId: string) => {
     switch (windowId) {
       case 'about':
@@ -55,6 +77,8 @@ const WindowManager: React.FC<WindowManagerProps> = ({ openWindows, onCloseWindo
           title={getWindowTitle(windowId)}
           onClose={() => onCloseWindow(windowId)}
           initialPosition={{ x: 100 + index * 30, y: 100 + index * 30 }}
+          isMinimized={minimizedWindows.has(windowId)}
+          onMinimize={(minimized) => handleMinimize(windowId, minimized)}
         >
           {getWindowContent(windowId)}
         </Window>
