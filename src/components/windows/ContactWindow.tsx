@@ -1,14 +1,17 @@
 
-import React from 'react';
-import { Mail, ExternalLink, MapPin, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, ExternalLink, MapPin } from 'lucide-react';
+import ImageModal from '../ImageModal';
 
 const ContactWindow: React.FC = () => {
+  const [showImageModal, setShowImageModal] = useState(false);
+  
   const contactMethods = [
     {
       type: 'Email',
-      value: 'saimir.bunjaku@example.com',
+      value: 'saimirbunjaku@gmail.com',
       icon: Mail,
-      action: 'mailto:saimir.bunjaku@example.com'
+      action: 'mailto:saimirbunjaku@gmail.com'
     },
     {
       type: 'LinkedIn',
@@ -18,7 +21,7 @@ const ContactWindow: React.FC = () => {
     },
     {
       type: 'Location',
-      value: 'Kosovo',
+      value: 'Kosovo, Gjilan',
       icon: MapPin,
       action: null
     }
@@ -27,8 +30,16 @@ const ContactWindow: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <User className="w-8 h-8 text-white" />
+        <div 
+          className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-4 cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={() => setShowImageModal(true)}
+          title="Click to view full image"
+        >
+          <img 
+            src="/images/colprofil.jpg" 
+            alt="Saimir Bunjaku" 
+            className="w-full h-full object-cover"
+          />
         </div>
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Get In Touch</h2>
         <p className="text-gray-600 dark:text-gray-300 mt-2">Let's discuss your next project!</p>
@@ -65,6 +76,15 @@ const ContactWindow: React.FC = () => {
           <li>• Freelance Opportunities</li>
         </ul>
       </div>
+
+      {/* Image Modal */}
+      {showImageModal && (
+        <ImageModal 
+          src="/images/colprofil.jpg" 
+          alt="Saimir Bunjaku" 
+          onClose={() => setShowImageModal(false)} 
+        />
+      )}
     </div>
   );
 };

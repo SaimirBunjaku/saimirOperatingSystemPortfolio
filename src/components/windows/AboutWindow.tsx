@@ -1,13 +1,24 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, Calendar, Code } from 'lucide-react';
+import ImageModal from '../ImageModal';
 
 const AboutWindow: React.FC = () => {
+  const [showImageModal, setShowImageModal] = useState(false);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4">
-        <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-          <span className="text-white text-2xl font-bold">SB</span>
+        <div 
+          className="w-20 h-20 rounded-full overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={() => setShowImageModal(true)}
+          title="Click to view full image"
+        >
+          <img 
+            src="/images/colprofil.jpg" 
+            alt="Saimir Bunjaku" 
+            className="w-full h-full object-cover"
+          />
         </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Saimir Bunjaku</h2>
@@ -53,6 +64,15 @@ const AboutWindow: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Image Modal */}
+      {showImageModal && (
+        <ImageModal 
+          src="/images/colprofil.jpg" 
+          alt="Saimir Bunjaku" 
+          onClose={() => setShowImageModal(false)} 
+        />
+      )}
     </div>
   );
 };
