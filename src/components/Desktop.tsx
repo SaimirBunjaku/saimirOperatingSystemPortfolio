@@ -2,6 +2,7 @@
 import React from 'react';
 import DesktopIcon from './DesktopIcon';
 import ThemeToggle from './ThemeToggle';
+import MusicPlayer from './MusicPlayer';
 import { User, FolderOpen, Code, Mail, FileText, Palette } from 'lucide-react';
 
 interface DesktopProps {
@@ -88,6 +89,9 @@ const Desktop: React.FC<DesktopProps> = ({
           Theme
         </span>
       </div>
+      
+      {/* Music Player */}
+      <MusicPlayer />
     </div>
   );
 };
