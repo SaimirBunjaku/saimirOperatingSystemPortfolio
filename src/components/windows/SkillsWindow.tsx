@@ -1,19 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Code, Settings, Palette } from 'lucide-react';
 
 const SkillsWindow: React.FC = () => {
   const [isMaximized, setIsMaximized] = useState(false);
+  const windowRef = useRef<HTMLDivElement>(null);
   
   // Check if window is maximized by looking at its size
   useEffect(() => {
     const checkIfMaximized = () => {
+      if (!windowRef.current) return;
+      
       const windowWidth = window.innerWidth;
-      const windowElement = document.querySelector('.window-content');
-      if (windowElement) {
-        const windowRect = windowElement.getBoundingClientRect();
-        setIsMaximized(windowRect.width > windowWidth * 0.8);
-      }
+      const windowRect = windowRef.current.getBoundingClientRect();
+      setIsMaximized(windowRect.width > windowWidth * 0.8);
     };
     
     checkIfMaximized();
@@ -51,7 +51,7 @@ const SkillsWindow: React.FC = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto window-content">
+    <div ref={windowRef} className="h-full flex flex-col overflow-y-auto">
       <div className={`w-full ${isMaximized ? 'max-w-6xl mx-auto' : 'px-2'}`}>
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Skills & Technologies</h2>
         

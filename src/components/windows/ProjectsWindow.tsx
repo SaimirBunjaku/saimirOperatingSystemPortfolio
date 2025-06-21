@@ -1,21 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Code } from 'lucide-react';
 
 const ProjectsWindow: React.FC = () => {
   const [isMaximized, setIsMaximized] = useState(false);
+  const windowRef = useRef<HTMLDivElement>(null);
   
   // Check if window is maximized by looking at its size
   useEffect(() => {
     const checkIfMaximized = () => {
-      // If window is taking up most of the viewport, consider it maximized
+      if (!windowRef.current) return;
+      
       const windowWidth = window.innerWidth;
-      const windowElement = document.querySelector('.window-content');
-      if (windowElement) {
-        const windowRect = windowElement.getBoundingClientRect();
-        // If window width is more than 80% of viewport, consider it maximized
-        setIsMaximized(windowRect.width > windowWidth * 0.8);
-      }
+      const windowRect = windowRef.current.getBoundingClientRect();
+      setIsMaximized(windowRect.width > windowWidth * 0.8);
     };
     
     // Initial check
@@ -60,14 +58,14 @@ const ProjectsWindow: React.FC = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto window-content">
+    <div ref={windowRef} className="h-full flex flex-col overflow-y-auto">
       <div className={`w-full ${isMaximized ? 'max-w-6xl mx-auto' : 'px-2'}`}>
         <div className="flex items-center space-x-2 mb-4">
           <Code className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">My Projects</h2>
         </div>
 
-        {/* Use flex-col when not maximized, grid when maximized */}
+        {/* Use flex-col by default, and grid when maximized */}
         <div className={isMaximized 
           ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" 
           : "flex flex-col space-y-4"
@@ -101,23 +99,6 @@ const ProjectsWindow: React.FC = () => {
               </button>
             </div>
           ))}
-        </div>
-
-        <div className="mt-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Upcoming Projects</h3>
-          <div className={isMaximized 
-            ? "grid grid-cols-1 md:grid-cols-2 gap-3" 
-            : "flex flex-col space-y-3"
-          }>
-            <div className="bg-white dark:bg-gray-800 p-3 rounded-md border border-blue-100 dark:border-blue-800">
-              <div className="font-medium text-gray-800 dark:text-gray-100">AI-Powered Dashboard</div>
-              <div className="text-gray-600 dark:text-gray-300 text-sm">Data visualization with AI insights</div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 p-3 rounded-md border border-blue-100 dark:border-blue-800">
-              <div className="font-medium text-gray-800 dark:text-gray-100">Mobile App</div>
-              <div className="text-gray-600 dark:text-gray-300 text-sm">Cross-platform app with React Native</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
