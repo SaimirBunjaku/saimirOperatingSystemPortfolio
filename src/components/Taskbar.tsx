@@ -7,8 +7,8 @@ interface TaskbarProps {
   openWindows: string[];
   onOpenWindow: (windowId: string) => void;
   startMenuOpen: boolean;
-  setStartMenuOpen: (open: boolean) => void;
-  onActivateWindow?: (windowId: string) => void;
+  setStartMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onActivateWindow: (windowId: string) => void;
 }
 
 const Taskbar: React.FC<TaskbarProps> = ({
@@ -19,10 +19,14 @@ const Taskbar: React.FC<TaskbarProps> = ({
   onActivateWindow
 }) => {
   const handleWindowClick = (windowId: string) => {
-    if (onActivateWindow) {
-      onActivateWindow(windowId);
+    // Use the global toggleMinimize function if available
+    // @ts-ignore - Accessing custom property on window
+    if (window.toggleWindowMinimize) {
+      // @ts-ignore
+      window.toggleWindowMinimize(windowId);
     } else {
-      onOpenWindow(windowId);
+      // Fallback to just activating the window
+      onActivateWindow(windowId);
     }
   };
 

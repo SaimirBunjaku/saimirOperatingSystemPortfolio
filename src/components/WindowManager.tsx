@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Window from './Window';
 import AboutWindow from './windows/AboutWindow';
 import ProjectsWindow from './windows/ProjectsWindow';
@@ -22,6 +22,9 @@ const WindowManager: React.FC<WindowManagerProps> = ({
 }) => {
   const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
 
+  // Remove the effect that automatically un-minimizes windows when they become active
+  // This was causing the immediate un-minimization issue
+
   const handleMinimize = (windowId: string, minimized: boolean) => {
     setMinimizedWindows(prev => {
       const newSet = new Set(prev);
@@ -34,6 +37,36 @@ const WindowManager: React.FC<WindowManagerProps> = ({
       return newSet;
     });
   };
+
+  // Add a function to toggle minimization from taskbar
+  const toggleMinimize = (windowId: string) => {
+    if (minimizedWindows.has(windowId)) {
+      // If window is minimized, restore it and make it active
+      setMinimizedWindows(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(windowId);
+        return newSet;
+      });
+      onActivateWindow?.(windowId);
+    } else {
+      // If window is visible, minimize it
+      setMinimizedWindows(prev => {
+        const newSet = new Set(prev);
+        newSet.add(windowId);
+        return newSet;
+      });
+    }
+  };
+
+  // Expose the toggleMinimize function to parent components
+  useEffect(() => {
+    // @ts-ignore - Adding a custom property to the window object
+    window.toggleWindowMinimize = toggleMinimize;
+    return () => {
+      // @ts-ignore
+      delete window.toggleWindowMinimize;
+    };
+  }, [minimizedWindows]);
 
   const getWindowContent = (windowId: string) => {
     switch (windowId) {
@@ -79,6 +112,8 @@ const WindowManager: React.FC<WindowManagerProps> = ({
           initialPosition={{ x: 100 + index * 30, y: 100 + index * 30 }}
           isMinimized={minimizedWindows.has(windowId)}
           onMinimize={(minimized) => handleMinimize(windowId, minimized)}
+          isActive={activeWindow === windowId}
+          onActivate={() => onActivateWindow?.(windowId)}
         >
           {getWindowContent(windowId)}
         </Window>

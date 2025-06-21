@@ -9,6 +9,8 @@ interface WindowProps {
   initialPosition?: { x: number; y: number };
   isMinimized?: boolean;
   onMinimize?: (minimized: boolean) => void;
+  isActive?: boolean;
+  onActivate?: () => void;
 }
 
 const Window: React.FC<WindowProps> = ({ 
@@ -17,7 +19,9 @@ const Window: React.FC<WindowProps> = ({
   onClose, 
   initialPosition = { x: 100, y: 100 },
   isMinimized = false,
-  onMinimize
+  onMinimize,
+  isActive = false,
+  onActivate
 }) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
@@ -80,6 +84,7 @@ const Window: React.FC<WindowProps> = ({
     if (isMinimized) {
       onMinimize?.(false);
     }
+    onActivate?.();
   };
 
   if (isMinimized) {
