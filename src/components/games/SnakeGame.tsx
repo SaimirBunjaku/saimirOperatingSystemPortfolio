@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+interface SnakeGameProps {
+  isMaximized?: boolean;
+}
+
 const boardSize = 10;
 const initialSnake = [{ x: 5, y: 5 }];
 const initialDirection = { x: 1, y: 0 };
 
-const SnakeGame: React.FC = () => {
+const SnakeGame: React.FC<SnakeGameProps> = ({ isMaximized }) => {
   const [snake, setSnake] = useState(initialSnake);
   const [food, setFood] = useState({ x: 2, y: 2 });
   const [isGameOver, setIsGameOver] = useState(false);
@@ -92,50 +96,60 @@ const SnakeGame: React.FC = () => {
     };
   }, [food]);
 
+  // Responsive sizing based on maximized state
+  const cellSize = isMaximized ? 30 : 20;
+  const width = isMaximized ? 500 : 350;
+  const height = isMaximized ? 480 : 330;
+
   return (
-  <div className="w-[350px] h-[330px] flex flex-col items-center p-4 bg-black text-white overflow-hidden">
-    <div className="text-xl font-bold mb-2">🐍 Snake Game</div>
-    <div className="mb-2 text-sm">
-      Score: <span className="font-semibold">{score}</span>
-    </div>
+    <div
+      className="flex flex-col items-center p-4 bg-black text-white overflow-hidden"
+      style={{ width, height, margin: '0 auto'}}
+    >
+      <div className={`font-bold mb-2 ${isMaximized ? 'text-2xl' : 'text-xl'}`}>🐍 Snake Game</div>
+      <div className="mb-2 text-sm">
+        Score: <span className="font-semibold">{score}</span>
+      </div>
 
-    {isGameOver ? (
-      <div className="flex flex-1 flex-col justify-center items-center text-red-500">
-        <div className="text-3xl font-bold mb-4">Game Over</div>
-        <button
-          onClick={resetGame}
-          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white text-base"
+      {isGameOver ? (
+        <div className="flex flex-1 flex-col justify-center items-center text-red-500 w-full">
+          <div className={`${isMaximized ? 'text-4xl' : 'text-3xl'} font-bold mb-4`}>
+            Game Over
+          </div>
+          <button
+            onClick={resetGame}
+            className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white text-base"
+          >
+            Restart
+          </button>
+        </div>
+      ) : (
+        <div
+          className="grid"
+          style={{
+            gridTemplateRows: `repeat(${boardSize}, ${cellSize}px)`,
+            gridTemplateColumns: `repeat(${boardSize}, ${cellSize}px)`,
+          }}
         >
-          Restart
-        </button>
-      </div>
-    ) : (
-      <div
-        className="grid"
-        style={{
-          gridTemplateRows: `repeat(${boardSize}, 20px)`,
-          gridTemplateColumns: `repeat(${boardSize}, 20px)`,
-        }}
-      >
-        {[...Array(boardSize * boardSize)].map((_, index) => {
-          const x = index % boardSize;
-          const y = Math.floor(index / boardSize);
-          const isSnake = snake.some(segment => segment.x === x && segment.y === y);
-          const isFood = food.x === x && food.y === y;
-          return (
-            <div
-              key={index}
-              className={`w-5 h-5 border border-gray-800 ${
-                isSnake ? 'bg-green-500' : isFood ? 'bg-red-500' : 'bg-black'
-              }`}
-            />
-          );
-        })}
-      </div>
-    )}
-  </div>
-);
-
+          {[...Array(boardSize * boardSize)].map((_, index) => {
+            const x = index % boardSize;
+            const y = Math.floor(index / boardSize);
+            const isSnake = snake.some(segment => segment.x === x && segment.y === y);
+            const isFood = food.x === x && food.y === y;
+            return (
+              <div
+                key={index}
+                className={`border border-gray-800 ${
+                  isSnake ? 'bg-green-500' : isFood ? 'bg-red-500' : 'bg-black'
+                }`}
+                style={{ width: cellSize, height: cellSize }}
+              />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SnakeGame;

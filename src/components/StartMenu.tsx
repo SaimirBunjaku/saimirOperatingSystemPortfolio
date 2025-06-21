@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { User, FolderOpen, Code, Mail, FileText, Palette } from 'lucide-react';
+import { User, FolderOpen, Code, Mail, FileText, Palette, Gamepad } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 interface StartMenuProps {
@@ -14,7 +14,8 @@ const StartMenu: React.FC<StartMenuProps> = ({ onOpenWindow, onClose }) => {
     { id: 'projects', name: 'Projects', icon: FolderOpen },
     { id: 'skills', name: 'Skills', icon: Code },
     { id: 'experience', name: 'Experience', icon: FileText },
-    { id: 'contact', name: 'Contact', icon: Mail }
+    { id: 'contact', name: 'Contact', icon: Mail },
+    { id: 'games', name: 'Games', icon: Gamepad }
   ];
 
   const handleItemClick = (itemId: string) => {
@@ -28,8 +29,12 @@ const StartMenu: React.FC<StartMenuProps> = ({ onOpenWindow, onClose }) => {
       <div className="absolute bottom-12 left-0 w-80 bg-gray-900 dark:bg-gray-800 bg-opacity-95 backdrop-blur-sm border border-gray-600 dark:border-gray-700 rounded-tr-lg shadow-2xl z-50 transition-colors duration-200">
         <div className="p-4">
           <div className="flex items-center space-x-3 mb-4 pb-4 border-b border-gray-600 dark:border-gray-700">
-            <div className="w-12 h-12 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center">
-              <User className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-blue-600 dark:bg-blue-700 rounded-full overflow-hidden">
+              <img
+                src="../../public/images/colprofil.jpg"
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <div className="text-white font-medium">Saimir Bunjaku</div>

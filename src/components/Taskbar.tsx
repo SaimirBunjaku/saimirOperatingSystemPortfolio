@@ -122,7 +122,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
         </div>
 
         {/* System tray */}
-        <div className="ml-auto flex items-center space-x-2">
+        <div className="ml-auto flex items-center space-x-2 pr-3">
           <button className="p-1 hover:bg-gray-700 dark:hover:bg-gray-800 rounded text-white">
             <Search className="w-4 h-4" />
           </button>

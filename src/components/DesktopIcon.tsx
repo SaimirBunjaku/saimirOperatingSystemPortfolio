@@ -5,7 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DesktopIconProps {
   id: string;
-  name: string;
+  name: React.ReactNode;
   icon: LucideIcon;
   position: { x: number; y: number };
   onDoubleClick: () => void;

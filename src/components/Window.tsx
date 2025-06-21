@@ -166,7 +166,7 @@ const Window: React.FC<WindowProps> = ({
         height: isMaximized ? 'calc(100% - 48px)' : isMobile ? 'calc(100% - 48px)' : 'calc(400px - 48px)' 
       }}>
         <div className={`h-full ${disableOverflow ? '' : 'overflow-y-auto'}`}>
-          {children}
+          {React.isValidElement(children) ? React.cloneElement(children as React.ReactElement, { isMaximized }) : children}
         </div>
       </div>
     </div>
