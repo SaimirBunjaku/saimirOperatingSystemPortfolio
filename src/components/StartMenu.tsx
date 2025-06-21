@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { User, FolderOpen, Code, Mail, FileText, Settings, LogOut } from 'lucide-react';
+import { User, FolderOpen, Code, Mail, FileText, Palette } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 interface StartMenuProps {
   onOpenWindow: (windowId: string) => void;
@@ -13,8 +14,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ onOpenWindow, onClose }) => {
     { id: 'projects', name: 'Projects', icon: FolderOpen },
     { id: 'skills', name: 'Skills', icon: Code },
     { id: 'experience', name: 'Experience', icon: FileText },
-    { id: 'contact', name: 'Contact', icon: Mail },
-    { id: 'settings', name: 'Settings', icon: Settings }
+    { id: 'contact', name: 'Contact', icon: Mail }
   ];
 
   const handleItemClick = (itemId: string) => {
@@ -48,6 +48,15 @@ const StartMenu: React.FC<StartMenuProps> = ({ onOpenWindow, onClose }) => {
                 <span>{item.name}</span>
               </button>
             ))}
+            
+            {/* Theme toggle section */}
+            <div className="flex items-center justify-between p-2 text-white">
+              <div className="flex items-center space-x-3">
+                <Palette className="w-5 h-5" />
+                <span>Theme</span>
+              </div>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>
