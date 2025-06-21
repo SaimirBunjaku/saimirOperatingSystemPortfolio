@@ -10,6 +10,7 @@ const Index = () => {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [activeWindow, setActiveWindow] = useState<string | undefined>(undefined);
   const [isSleeping, setIsSleeping] = useState(true);
+  const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
 
   const openWindow = (windowId: string) => {
     if (!openWindows.includes(windowId)) {
@@ -22,6 +23,12 @@ const Index = () => {
     setOpenWindows(openWindows.filter(id => id !== windowId));
     if (activeWindow === windowId) {
       setActiveWindow(undefined);
+    }
+    // Also remove from minimized windows if it was minimized
+    if (minimizedWindows.has(windowId)) {
+      const newMinimized = new Set(minimizedWindows);
+      newMinimized.delete(windowId);
+      setMinimizedWindows(newMinimized);
     }
   };
 
@@ -38,26 +45,49 @@ const Index = () => {
     setOpenWindows(newOrder);
   };
 
+  // Add a function to handle window minimization
+  const handleMinimizeWindow = (windowId: string, isMinimized: boolean) => {
+    setMinimizedWindows(prev => {
+      const newSet = new Set(prev);
+      if (isMinimized) {
+        newSet.add(windowId);
+      } else {
+        newSet.delete(windowId);
+      }
+      return newSet;
+    });
+  };
+
+  // Add a function to restore a minimized window
+  const restoreWindow = (windowId: string) => {
+    setMinimizedWindows(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(windowId);
+      return newSet;
+    });
+    setActiveWindow(windowId);
+  };
+
   return (
     <>
       {isSleeping ? (
         <SleepScreen onWake={handleWake} />
       ) : (
-        <div className="h-screen w-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-gray-800 dark:via-gray-900 dark:to-black overflow-hidden relative transition-colors duration-300">
-          {/* Desktop wallpaper pattern */}
-          <div className="absolute inset-0 opacity-10 dark:opacity-5">
-            <div className="w-full h-full" style={{
-              backgroundImage: `radial-gradient(circle at 25% 25%, white 2px, transparent 2px)`,
-              backgroundSize: '50px 50px'
-            }} />
-          </div>
+        <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-900 to-purple-900 dark:from-gray-900 dark:to-gray-800 text-white">
           
-          <Desktop onOpenWindow={openWindow} />
+          <Desktop 
+            onOpenWindow={openWindow} 
+            openWindows={openWindows}
+            minimizedWindows={minimizedWindows}
+            onRestoreWindow={restoreWindow}
+          />
           <WindowManager 
             openWindows={openWindows} 
             onCloseWindow={closeWindow}
             activeWindow={activeWindow}
             onActivateWindow={activateWindow}
+            minimizedWindows={minimizedWindows}
+            onMinimizeWindow={handleMinimizeWindow}
           />
           <Taskbar 
             openWindows={openWindows}

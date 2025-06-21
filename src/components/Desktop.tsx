@@ -6,9 +6,17 @@ import { User, FolderOpen, Code, Mail, FileText, Palette } from 'lucide-react';
 
 interface DesktopProps {
   onOpenWindow: (windowId: string) => void;
+  openWindows: string[];
+  minimizedWindows: Set<string>;
+  onRestoreWindow: (windowId: string) => void;
 }
 
-const Desktop: React.FC<DesktopProps> = ({ onOpenWindow }) => {
+const Desktop: React.FC<DesktopProps> = ({ 
+  onOpenWindow, 
+  openWindows, 
+  minimizedWindows, 
+  onRestoreWindow 
+}) => {
   const desktopIcons = [
     {
       id: 'about',
@@ -42,6 +50,21 @@ const Desktop: React.FC<DesktopProps> = ({ onOpenWindow }) => {
     }
   ];
 
+  const handleIconDoubleClick = (windowId: string) => {
+    // Check if the window is already open
+    if (openWindows.includes(windowId)) {
+      // If it's minimized, restore it
+      if (minimizedWindows.has(windowId)) {
+        onRestoreWindow(windowId);
+      }
+      // If it's already open and not minimized, just activate it
+      // (this is handled by the WindowManager)
+    } else {
+      // If it's not open at all, open a new window
+      onOpenWindow(windowId);
+    }
+  };
+
   return (
     <div className="absolute inset-0 pb-12">
       {desktopIcons.map((icon) => (
@@ -51,7 +74,7 @@ const Desktop: React.FC<DesktopProps> = ({ onOpenWindow }) => {
           name={icon.name}
           icon={icon.icon}
           position={icon.position}
-          onDoubleClick={() => onOpenWindow(icon.id)}
+          onDoubleClick={() => handleIconDoubleClick(icon.id)}
         />
       ))}
       

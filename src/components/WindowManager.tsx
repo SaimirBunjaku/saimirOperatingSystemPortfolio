@@ -12,49 +12,34 @@ interface WindowManagerProps {
   onCloseWindow: (windowId: string) => void;
   activeWindow?: string;
   onActivateWindow?: (windowId: string) => void;
+  minimizedWindows: Set<string>;
+  onMinimizeWindow: (windowId: string, isMinimized: boolean) => void;
 }
 
 const WindowManager: React.FC<WindowManagerProps> = ({ 
   openWindows, 
   onCloseWindow, 
   activeWindow,
-  onActivateWindow 
+  onActivateWindow,
+  minimizedWindows,
+  onMinimizeWindow
 }) => {
-  const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
-
-  // Remove the effect that automatically un-minimizes windows when they become active
-  // This was causing the immediate un-minimization issue
-
   const handleMinimize = (windowId: string, minimized: boolean) => {
-    setMinimizedWindows(prev => {
-      const newSet = new Set(prev);
-      if (minimized) {
-        newSet.add(windowId);
-      } else {
-        newSet.delete(windowId);
-        onActivateWindow?.(windowId);
-      }
-      return newSet;
-    });
+    onMinimizeWindow(windowId, minimized);
+    if (!minimized) {
+      onActivateWindow?.(windowId);
+    }
   };
 
   // Add a function to toggle minimization from taskbar
   const toggleMinimize = (windowId: string) => {
     if (minimizedWindows.has(windowId)) {
       // If window is minimized, restore it and make it active
-      setMinimizedWindows(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(windowId);
-        return newSet;
-      });
+      onMinimizeWindow(windowId, false);
       onActivateWindow?.(windowId);
     } else {
       // If window is visible, minimize it
-      setMinimizedWindows(prev => {
-        const newSet = new Set(prev);
-        newSet.add(windowId);
-        return newSet;
-      });
+      onMinimizeWindow(windowId, true);
     }
   };
 
