@@ -10,6 +10,9 @@ interface DesktopIconProps {
   onDoubleClick: () => void;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  isDragging?: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void;
 }
 
 const DesktopIcon: React.FC<DesktopIconProps> = ({
@@ -20,10 +23,14 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({
   onDoubleClick,
   isSelected,
   onSelect,
+  isDragging = false,
+  onDragStart,
+  onDragEnd
 }) => {
   const isMobile = useIsMobile();
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onSelect(id);
     if (isMobile && isSelected) {
       // If already selected on mobile, tap again to open
@@ -33,17 +40,28 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({
 
   return (
     <div
-      className="absolute cursor-pointer select-none group"
-      style={{ left: position.x, top: position.y }}
+      className={`absolute select-none ${isDragging ? 'cursor-grabbing' : 'cursor-pointer'}`}
+      style={{ 
+        left: position.x, 
+        top: position.y,
+        transform: isDragging ? 'scale(1.05)' : 'none',
+        transition: 'transform 0.1s ease',
+        zIndex: isDragging ? 100 : 'auto'
+      }}
       onClick={handleClick}
       onDoubleClick={isMobile ? undefined : onDoubleClick}
+      draggable={!isMobile}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
     >
       <div
         className={`flex flex-col items-center p-2 rounded ${
           isSelected ? 'bg-blue-500 bg-opacity-30' : ''
-        } hover:bg-blue-400 hover:bg-opacity-20 transition-colors`}
+        } ${isDragging ? 'opacity-90' : 'hover:bg-blue-400 hover:bg-opacity-20'} transition-all`}
       >
-        <div className="bg-white bg-opacity-90 p-3 rounded-lg shadow-lg mb-1 group-hover:scale-105 transition-transform">
+        <div className={`bg-white bg-opacity-90 p-3 rounded-lg shadow-lg mb-1 ${
+          isDragging ? 'scale-105' : 'group-hover:scale-105'
+        } transition-transform`}>
           <Icon className="w-8 h-8 text-blue-600" />
         </div>
         <span className="text-white text-xs font-medium text-center max-w-16 leading-tight drop-shadow-md">

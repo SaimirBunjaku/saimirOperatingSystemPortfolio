@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DesktopIcon from './DesktopIcon';
 import ThemeToggle from './ThemeToggle';
 import MusicPlayer from './MusicPlayer';
@@ -11,12 +11,19 @@ interface DesktopProps {
   onRestoreWindow: (windowId: string) => void;
 }
 
+interface IconData {
+  id: string;
+  icon: any;
+  position: { x: number; y: number };
+}
+
 const Desktop: React.FC<DesktopProps> = ({
   onOpenWindow,
   openWindows,
   minimizedWindows,
   onRestoreWindow,
 }) => {
+  const desktopRef = useRef<HTMLDivElement>(null);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -34,18 +41,18 @@ const Desktop: React.FC<DesktopProps> = ({
 
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState<string>('');
-
-  // New state for currently selected icon (single selection)
   const [selectedIconId, setSelectedIconId] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  const desktopIcons = [
+  const [icons, setIcons] = useState<IconData[]>([
     { id: 'about', icon: User, position: { x: 50, y: 50 } },
     { id: 'projects', icon: FolderOpen, position: { x: 50, y: 150 } },
     { id: 'skills', icon: Code, position: { x: 50, y: 250 } },
     { id: 'experience', icon: FileText, position: { x: 50, y: 350 } },
     { id: 'contact', icon: Mail, position: { x: 50, y: 450 } },
     { id: 'games', icon: Gamepad, position: { x: 50, y: 550 } },
-  ];
+  ]);
 
   const handleIconDoubleClick = (windowId: string) => {
     if (openWindows.includes(windowId)) {
@@ -59,11 +66,8 @@ const Desktop: React.FC<DesktopProps> = ({
 
   const handleIconRightClick = (e: React.MouseEvent, iconId: string) => {
     e.preventDefault();
-    setContextMenu({
-      x: e.clientX,
-      y: e.clientY,
-      iconId,
-    });
+    e.stopPropagation();
+    setContextMenu({ x: e.clientX, y: e.clientY, iconId });
   };
 
   const handleOpen = () => {
@@ -105,33 +109,84 @@ const Desktop: React.FC<DesktopProps> = ({
     }
   };
 
-  // Clear context menu on window click
+  const handleSelectIcon = (id: string) => {
+    setSelectedIconId(id);
+  };
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    e.dataTransfer.setData('iconId', id);
+    setDraggingId(id);
+    
+    // Calculate offset from mouse position to icon position
+    const iconElement = e.currentTarget as HTMLElement;
+    const rect = iconElement.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+    
+    // Use a transparent image for better drag visuals
+    const dragImage = new Image();
+    dragImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    e.dataTransfer.setDragImage(dragImage, 0, 0);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!draggingId || !desktopRef.current) return;
+
+    const desktopRect = desktopRef.current.getBoundingClientRect();
+    const newX = e.clientX - desktopRect.left - dragOffset.x;
+    const newY = e.clientY - desktopRect.top - dragOffset.y;
+
+    setIcons(prev => prev.map(icon =>
+      icon.id === draggingId ? { ...icon, position: { x: newX, y: newY } } : icon
+    ));
+  };
+
+  const handleDragEnd = () => {
+    setDraggingId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDraggingId(null);
+  };
+
   useEffect(() => {
     const handleClick = () => {
       setContextMenu(null);
-      setSelectedIconId(null); // Also clear selection when clicking outside icons
+      setSelectedIconId(null);
     };
     window.addEventListener('click', handleClick);
     return () => window.removeEventListener('click', handleClick);
   }, []);
 
-  // Handle icon selection
-  const handleSelectIcon = (id: string) => {
-    setSelectedIconId(id);
-  };
-
   return (
-    <div className="absolute inset-0 pb-12">
-      {desktopIcons.map((icon) => (
+    <div
+      ref={desktopRef}
+      className="absolute inset-0 pb-12"
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      {icons.map((icon) => (
         <div
           key={icon.id}
-          style={{ position: 'absolute', left: icon.position.x, top: icon.position.y }}
+          style={{ 
+            position: 'absolute', 
+            left: icon.position.x, 
+            top: icon.position.y,
+            cursor: draggingId === icon.id ? 'grabbing' : 'pointer'
+          }}
           onDoubleClick={() => handleIconDoubleClick(icon.id)}
           onContextMenu={(e) => handleIconRightClick(e, icon.id)}
           onClick={(e) => {
-            e.stopPropagation(); // Prevent window click from clearing selection immediately
+            e.stopPropagation();
             handleSelectIcon(icon.id);
           }}
+          draggable
+          onDragStart={(e) => handleDragStart(e, icon.id)}
+          onDragEnd={handleDragEnd}
         >
           <DesktopIcon
             id={icon.id}
@@ -156,6 +211,7 @@ const Desktop: React.FC<DesktopProps> = ({
             onDoubleClick={() => handleIconDoubleClick(icon.id)}
             isSelected={selectedIconId === icon.id}
             onSelect={handleSelectIcon}
+            isDragging={draggingId === icon.id}
           />
         </div>
       ))}
@@ -164,6 +220,7 @@ const Desktop: React.FC<DesktopProps> = ({
         <ul
           className="absolute bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-50 text-sm"
           style={{ top: contextMenu.y, left: contextMenu.x }}
+          onClick={(e) => e.stopPropagation()}
         >
           <li
             onClick={handleOpen}
