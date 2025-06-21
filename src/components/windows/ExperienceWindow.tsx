@@ -5,52 +5,66 @@ import { Calendar, MapPin, Building } from 'lucide-react';
 const ExperienceWindow: React.FC = () => {
   const experiences = [
     {
-      title: 'Frontend Developer',
-      company: 'Tech Solutions',
-      period: '2022 - Present',
-      location: 'Remote',
-      description: 'Developing modern web applications using React, TypeScript, and other cutting-edge technologies.',
+      title: 'Front-end Developer',
+      company: 'Cloudarina',
+      period: 'April 2023 - Current',
+      location: 'Prishtine - Remote',
+      description: 'Leading the development of responsive interfaces using HTML, CSS and jQuery, ensuring functionality across diverse devices and browsers.',
       achievements: [
-        'Built responsive user interfaces for 10+ client projects',
-        'Improved application performance by 40%',
-        'Collaborated with design team to implement pixel-perfect UIs'
+        'Converted client designs into pixel-perfect, reusable web components',
+        'Refactored the entire codebase, optimizing functions for better performance',
+        'Increased efficiency and reduced redundancy across the platform'
       ]
     },
     {
-      title: 'Junior Frontend Developer',
-      company: 'Digital Agency',
-      period: '2021 - 2022',
-      location: 'Kosovo',
-      description: 'Started my professional journey developing websites and web applications.',
+      title: 'Contract Specialist',
+      company: 'Kosbit',
+      period: 'May 2020 – Current',
+      location: 'Prishtine - Remote',
+      description: 'Managing contract development and standardization for enhanced organizational consistency.',
       achievements: [
-        'Converted designs to functional React components',
-        'Maintained and updated existing codebases',
-        'Learned industry best practices and coding standards'
+        'Developed and standardized contract templates for enhanced organizational consistency',
+        'Orchestrated negotiation and finalization of 1000+ contracts',
+        'Reduced procurement costs through strategic contract management'
+      ]
+    },
+    {
+      title: 'Full-stack Developer - Internship',
+      company: 'Starlabs',
+      period: 'January-April, 2023',
+      location: 'Prishtine - Remote',
+      description: 'Developed a full-stack web application utilizing the MERN (MongoDB, Express.js, React and Node.js) stack.',
+      achievements: [
+        'Collaborated with the team on building RESTful APIs with Express.js and Node.js',
+        'Facilitated smooth data flow between frontend and backend',
+        'Managed MongoDB database schema for efficient storage and retrieval of user preferences and game data'
       ]
     }
   ];
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Work Experience</h2>
+      <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Work Experience</h2>
       
-      <div className="space-y-4 max-h-64 overflow-y-auto">
+      <div className="space-y-4 max-h-full overflow-y-auto">
         {experiences.map((exp, index) => (
-          <div key={index} className="border border-gray-200 rounded-lg p-4">
+          <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-700">
             <div className="flex justify-between items-start mb-2">
               <div>
-                <h3 className="font-semibold text-gray-800">{exp.title}</h3>
-                <div className="flex items-center space-x-1 text-blue-600">
+                <h3 className="font-semibold text-gray-800 dark:text-gray-100">{exp.title}</h3>
+                <div className="flex items-center space-x-1 text-blue-600 dark:text-blue-400">
                   <Building className="w-4 h-4" />
                   <span className="text-sm">{exp.company}</span>
                 </div>
               </div>
-              <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                Current
-              </span>
+              {index === 0 && (
+                <span className="bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 text-xs px-2 py-1 rounded">
+                  Current
+                </span>
+              )}
             </div>
             
-            <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+            <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-3">
               <div className="flex items-center space-x-1">
                 <Calendar className="w-4 h-4" />
                 <span>{exp.period}</span>
@@ -61,11 +75,11 @@ const ExperienceWindow: React.FC = () => {
               </div>
             </div>
             
-            <p className="text-gray-600 text-sm mb-3">{exp.description}</p>
+            <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{exp.description}</p>
             
             <div>
-              <h4 className="font-medium text-gray-800 text-sm mb-2">Key Achievements:</h4>
-              <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
+              <h4 className="font-medium text-gray-800 dark:text-gray-100 text-sm mb-2">Key Achievements:</h4>
+              <ul className="list-disc list-inside text-xs text-gray-600 dark:text-gray-300 space-y-1">
                 {exp.achievements.map((achievement, idx) => (
                   <li key={idx}>{achievement}</li>
                 ))}

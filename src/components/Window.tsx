@@ -13,13 +13,16 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [zIndex, setZIndex] = useState(30);
   const windowRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (isMaximized) return;
     
     setIsDragging(true);
+    setZIndex(50); // Bring to front when clicked
     const rect = windowRef.current?.getBoundingClientRect();
     if (rect) {
       setDragOffset({
@@ -55,15 +58,34 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
 
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);
+    if (isMinimized) setIsMinimized(false);
   };
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
+
+  const handleWindowClick = () => {
+    setZIndex(50); // Bring to front when any part of window is clicked
+  };
+
+  if (isMinimized) {
+    return null; // Hide window when minimized
+  }
 
   return (
     <div
       ref={windowRef}
-      className={`absolute bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-300 dark:border-gray-600 z-30 transition-colors duration-200 ${
-        isMaximized ? 'inset-4' : 'w-96 h-80'
+      className={`absolute bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-300 dark:border-gray-600 transition-colors duration-200 ${
+        isMaximized ? 'inset-4' : 'w-96'
       } ${isDragging ? 'select-none' : ''}`}
-      style={isMaximized ? {} : { left: position.x, top: position.y }}
+      style={isMaximized ? { zIndex } : { 
+        left: position.x, 
+        top: position.y, 
+        zIndex,
+        height: '400px'
+      }}
+      onClick={handleWindowClick}
     >
       {/* Title bar */}
       <div
@@ -74,7 +96,7 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
         <div className="flex space-x-1">
           <button
             className="w-6 h-6 bg-yellow-500 hover:bg-yellow-400 rounded-full flex items-center justify-center transition-colors"
-            onClick={() => {}}
+            onClick={toggleMinimize}
           >
             <Minus className="w-3 h-3 text-yellow-900" />
           </button>
@@ -94,7 +116,9 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
       </div>
 
       {/* Window content */}
-      <div className="p-4 h-full overflow-auto text-gray-900 dark:text-gray-100">
+      <div className="p-4 overflow-auto text-gray-900 dark:text-gray-100" style={{ 
+        height: isMaximized ? 'calc(100% - 48px)' : 'calc(400px - 48px)' 
+      }}>
         {children}
       </div>
     </div>

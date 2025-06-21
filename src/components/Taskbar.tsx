@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search, Settings, User } from 'lucide-react';
+import { Search } from 'lucide-react';
 import StartMenu from './StartMenu';
 
 interface TaskbarProps {
@@ -34,7 +34,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
           {openWindows.map((windowId) => (
             <button
               key={windowId}
-              className="h-8 px-3 bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded text-white text-xs capitalize transition-colors"
+              className="h-8 px-3 bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded text-white text-xs capitalize transition-colors border border-gray-500 dark:border-gray-600"
               onClick={() => onOpenWindow(windowId)}
             >
               {windowId}
