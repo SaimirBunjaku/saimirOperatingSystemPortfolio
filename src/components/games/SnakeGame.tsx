@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const boardSize = 15;
+const boardSize = 10;
 const initialSnake = [{ x: 5, y: 5 }];
 const initialDirection = { x: 1, y: 0 };
 
@@ -93,7 +93,7 @@ const SnakeGame: React.FC = () => {
   }, [food]);
 
   return (
-    <div className="w-[350px] h-[400px] flex flex-col items-center justify-center p-4 bg-black text-white overflow-hidden">
+    <div className="w-[350px] h-[400px] flex flex-col items-center p-4 bg-black text-white overflow-hidden">
       <div className="text-xl font-bold mb-2">🐍 Snake Game</div>
       <div className="mb-2 text-sm">
         Score: <span className="font-semibold">{score}</span>
