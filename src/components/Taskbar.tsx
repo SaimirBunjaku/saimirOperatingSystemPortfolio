@@ -18,12 +18,12 @@ const Taskbar: React.FC<TaskbarProps> = ({
 }) => {
   return (
     <>
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gray-800 bg-opacity-95 backdrop-blur-sm border-t border-gray-600 flex items-center px-2 z-50">
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gray-800 dark:bg-gray-900 bg-opacity-95 backdrop-blur-sm border-t border-gray-600 dark:border-gray-700 flex items-center px-2 z-50 transition-colors duration-200">
         {/* Start Button */}
         <button
           onClick={() => setStartMenuOpen(!startMenuOpen)}
-          className={`h-8 px-4 bg-gray-700 hover:bg-gray-600 rounded text-white text-sm font-medium transition-colors ${
-            startMenuOpen ? 'bg-gray-600' : ''
+          className={`h-8 px-4 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 rounded text-white text-sm font-medium transition-colors ${
+            startMenuOpen ? 'bg-gray-600 dark:bg-gray-700' : ''
           }`}
         >
           Start
@@ -34,7 +34,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
           {openWindows.map((windowId) => (
             <button
               key={windowId}
-              className="h-8 px-3 bg-gray-600 hover:bg-gray-500 rounded text-white text-xs capitalize transition-colors"
+              className="h-8 px-3 bg-gray-600 dark:bg-gray-700 hover:bg-gray-500 dark:hover:bg-gray-600 rounded text-white text-xs capitalize transition-colors"
               onClick={() => onOpenWindow(windowId)}
             >
               {windowId}
@@ -44,7 +44,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
 
         {/* System tray */}
         <div className="ml-auto flex items-center space-x-2">
-          <button className="p-1 hover:bg-gray-700 rounded text-white">
+          <button className="p-1 hover:bg-gray-700 dark:hover:bg-gray-800 rounded text-white">
             <Search className="w-4 h-4" />
           </button>
           <div className="text-white text-xs">

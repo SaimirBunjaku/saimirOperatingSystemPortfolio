@@ -60,14 +60,14 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
   return (
     <div
       ref={windowRef}
-      className={`absolute bg-white rounded-lg shadow-2xl border border-gray-300 z-30 ${
+      className={`absolute bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-300 dark:border-gray-600 z-30 transition-colors duration-200 ${
         isMaximized ? 'inset-4' : 'w-96 h-80'
       } ${isDragging ? 'select-none' : ''}`}
       style={isMaximized ? {} : { left: position.x, top: position.y }}
     >
       {/* Title bar */}
       <div
-        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-t-lg flex items-center justify-between cursor-move"
+        className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-gray-700 dark:to-gray-800 text-white px-4 py-2 rounded-t-lg flex items-center justify-between cursor-move"
         onMouseDown={handleMouseDown}
       >
         <span className="font-medium text-sm">{title}</span>
@@ -94,7 +94,7 @@ const Window: React.FC<WindowProps> = ({ title, children, onClose, initialPositi
       </div>
 
       {/* Window content */}
-      <div className="p-4 h-full overflow-auto">
+      <div className="p-4 h-full overflow-auto text-gray-900 dark:text-gray-100">
         {children}
       </div>
     </div>

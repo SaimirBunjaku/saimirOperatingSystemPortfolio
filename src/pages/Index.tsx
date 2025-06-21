@@ -19,9 +19,9 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 overflow-hidden relative">
+    <div className="h-screen w-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-gray-800 dark:via-gray-900 dark:to-black overflow-hidden relative transition-colors duration-300">
       {/* Desktop wallpaper pattern */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 dark:opacity-5">
         <div className="w-full h-full" style={{
           backgroundImage: `radial-gradient(circle at 25% 25%, white 2px, transparent 2px)`,
           backgroundSize: '50px 50px'

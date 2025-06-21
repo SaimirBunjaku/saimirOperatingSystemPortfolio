@@ -57,8 +57,8 @@ const Desktop: React.FC<DesktopProps> = ({ onOpenWindow }) => {
       
       {/* Theme Toggle positioned in top right */}
       <div className="absolute top-4 right-4 flex flex-col items-center">
-        <div className="bg-white bg-opacity-90 p-3 rounded-lg shadow-lg mb-1 hover:scale-105 transition-transform">
-          <Palette className="w-8 h-8 text-blue-600 mb-2" />
+        <div className="bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 p-3 rounded-lg shadow-lg mb-1 hover:scale-105 transition-all duration-200">
+          <Palette className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-2" />
           <ThemeToggle />
         </div>
         <span className="text-white text-xs font-medium text-center max-w-16 leading-tight drop-shadow-md">
